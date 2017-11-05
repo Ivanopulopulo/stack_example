@@ -37,17 +37,6 @@ matrix:
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
             - ubuntu-toolchain-r-test
           packages: ['clang-5.0']
-          
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: CXX_EVAL="clang++" CC_EVAL="clang" BUILD_TYPE='Debug'
-
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: CXX_EVAL="clang++" CC_EVAL="clang" BUILD_TYPE='Release'
-
 
 before_install:
   - export CXX=$CXX_EVAL
