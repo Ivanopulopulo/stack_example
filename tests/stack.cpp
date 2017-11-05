@@ -5,5 +5,5 @@
 TEST_CASE("empty method for empty stack", "")
 {
     stack<int> s;
-    REQUIRE( s.isempty() );
+    REQUIRE( s.empty() );
 }
