@@ -1,41 +1,49 @@
 #include "stack.hpp"
 #include <string>
 #include <chrono>
-#include <thread>
 
-void producer (stack<int> &st)
+void producer(stack<int> &Stack)
 {
-   for (;;)
-    {
-      st.push(rand()%100);
-      std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 1));
-    }
+	for(;;)
+	{
+        try
+        {
+		        Stack.push(std::rand() % 100);
+        }
+        catch(std::bad_alloc)
+        {
+                std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 1));
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 1));
+	}
 }
 
-void consumer (stack<int> &st)
+void consumer(stack<int> &Stack)
 {
-   for (;;)
-    {
-	   try
-	   { 
-       		st.pop();
-	   }
-	   catch(...)
-	   {
-		 std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) +2 ));   
-	   }
-      	   std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) +2 ));
-    }
+	for(;;)
+	{
+		try
+		{
+			Stack.pop();
+		}
+		catch(std::logic_error)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 2));
+		}
+		std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 2));
+	}	
 }
 
 int main()
 {
-	stack<int> st1;
+	stack<int> Stack;
 	
-	std::thread prod(producer, std::ref(st1));
-	std::thread cons(consumer, std::ref(st1));
+	std::thread prod(producer, std::ref(Stack));
+	std::thread cons(consumer, std::ref(Stack));
 	
 	prod.join();
 	cons.join();
-  return 0;
+
+	
+	return 0;
 }
