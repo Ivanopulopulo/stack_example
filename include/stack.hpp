@@ -68,7 +68,7 @@ template <typename T>
 void stack<T>::push(T const & value)
 {
 	std::lock_guard<std::mutex> lock(mutex_);
-	if (empty())
+	if (count_ == 0)
 	{
 		array_size_ = 1;
 		array_ = new T[array_size_]();
