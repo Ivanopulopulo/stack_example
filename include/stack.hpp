@@ -90,7 +90,7 @@ void stack<T>::push(T const & value)
 		array_ = new_array;
 	}
 
-	array_[count_] = obj;
+	array_[count_] = value;
 	++count_;
 
 }
