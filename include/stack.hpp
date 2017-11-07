@@ -76,9 +76,8 @@ void stack<T>::push(T const & value)
 	else if (array_size_ == count_)
 	{
 		try
-		{
-			
-		array_size_ *= 2;
+		{	
+		auto array_size = array_size_ == 0 ? 1 : array_size_ * 2;
 		T * new_array = new T[array_size_]();
 		std::copy(array_, array_ + count_, new_array);
 		delete[] array_;
