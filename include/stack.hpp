@@ -68,32 +68,31 @@ template <typename T>
 void stack<T>::push(T const & value)
 {
 	std::lock_guard<std::mutex> lock(mutex_);
-	if (count_ == 0)
+
+	if (count_ == array_size_)
 	{
-		array_size_ = 1;
-		array_ = new T[array_size_]();
-	}
-	else if (array_size_ == count_)
-	{
-		try
-		{	
 		auto array_size = array_size_ == 0 ? 1 : array_size_ * 2;
-		T * new_array = new T[array_size_]();
-		std::copy(array_, array_ + count_, new_array);
-		delete[] array_;
+		T* new_array = new T[array_size];
+		try
+		{
+			std::copy(array_, array_ + count_, new_array);
+		}
+		catch (...)
+		{
+			delete[] new_array;
+			throw "ERROR!\n";
+		}
+
+		array_size_ = array_size;
+
+		if (array_)
+			delete[] array_;
 		array_ = new_array;
-		}
-		catch(std::bad_alloc)
-	        {
-		        std::cerr << "bad_alloc caught" << std::endl;
-	        }
-		catch(...) 
-		{	
-			std::cerr << "ERROR!";
-		}
 	}
-	array_[count_] = value;
-	count_++;
+
+	array_[count_] = obj;
+	++count_;
+
 }
 template <typename T>
 std::shared_ptr<T> stack<T>::pop() {
