@@ -16,7 +16,6 @@ public:
 	stack& operator=(stack<T> const&)/*strong*/;
 	size_t count()const noexcept;
 	void push(T const&)/*strong*/;
-	std::shared_ptr<T> pop();/*strong*/;
 	auto try_pop()->std::shared_ptr<T>; /*strong*/
 	auto wait_and_pop()->std::shared_ptr<T>;
 	bool empty()const noexcept;
