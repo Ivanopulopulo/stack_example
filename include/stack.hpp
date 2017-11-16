@@ -104,7 +104,7 @@ auto stack<T>::try_pop() -> std::shared_ptr<T>
 	if (count_ == 0)
 		return nullptr;
 	--count_;
-	return std::make_shared<T>(array_[count_];
+	return std::make_shared<T>(array_[count_]);
 }
 template <typename T>
 auto stack<T>::wait_and_pop() -> std::shared_ptr<T>
