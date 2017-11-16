@@ -115,7 +115,7 @@ auto stack<T>::wait_and_pop() -> std::shared_ptr<T>
 		cond_.wait(lock);	
 	}
 	--count_;
-	return std::make_shared<T>(array_[count_];
+	return std::make_shared<T>(array_[count_]);
 }
 
 template <typename T>
