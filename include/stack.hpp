@@ -119,7 +119,7 @@ auto stack<T>::wait_and_pop() -> std::shared_ptr<T>
 }
 
 template <typename T>
-void stack<T>::swap(stack<T>& other)noexcept
+void stack<T>::swap(stack<T>& other)
 {
 	std::lock(mutex_, other.mutex_);
 	std::swap(array_, other.array_);
