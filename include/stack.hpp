@@ -4,6 +4,7 @@
 #include <new>
 #include <memory>
 #include <thread>
+#include <condition_variable>
 
 template <typename T>
 class stack
@@ -16,12 +17,14 @@ public:
 	size_t count()const noexcept;
 	void push(T const&)/*strong*/;
 	std::shared_ptr<T> pop();/*strong*/;
-	void print() const /*strong*/;
+	auto try_pop()->std::shared_ptr<T>; /*strong*/
+	auto wait_and_pop()->std::shared_ptr<T>;
 	bool empty()const noexcept;
 private:
-	void swap(stack<T>&)noexcept;
+	void swap(stack<T>&)/*noexcept*/;
 	T * array_;
 	mutable std::mutex mutex_;
+	std::condition_variable cond_;
 	size_t array_size_;
 	size_t count_;
 };
@@ -92,32 +95,29 @@ void stack<T>::push(T const & value)
 
 	array_[count_] = value;
 	++count_;
-
+	cond_.notify_one();
 }
 template <typename T>
-std::shared_ptr<T> stack<T>::pop() {
-	
-	std::lock_guard<std::mutex> lock(mutex_);
-	if (count_ > 0) {
-		auto res = std::make_shared<T>(array_[count_ - 1]);;
-		--count_;
-		return res;
-	} else {
-		throw "Empty!";
-	}
-}
-template <typename T>
-void stack<T>::print() const 
+auto stack<T>::try_pop() -> std::shared_ptr<T>
 {
-	mutex_.lock();
-	if(!empty())
-	{
-	        for (unsigned int i = 0; i < count_; ++i)
-		        std::cout << array_[i] << " ";
-	        std::cout << std::endl;
-	}
-	mutex_.unlock();
+	std::lock_guard<std::mutex> lock(mutex_);
+	if (count_ == 0)
+		return nullptr;
+	--count_;
+	return std::make_shared<T>(array_[count_];
 }
+template <typename T>
+auto stack<T>::wait_and_pop() -> std::shared_ptr<T>
+{
+	std::unique_lock<std::mutex> lock(mutex_);
+	while(!count_)
+	{
+		cond_.wait(lock);	
+	}
+	--count_;
+	return std::make_shared<T>(array_[count_];
+}
+
 template <typename T>
 void stack<T>::swap(stack<T>& other)noexcept
 {
