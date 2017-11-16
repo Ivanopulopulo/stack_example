@@ -24,12 +24,12 @@ void consumer(stack<int> &Stack)
 	{
 		try
 		{
-			Stack.pop();
-		}
-		catch(std::logic_error)
-		{
-			std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 2));
-		}
+			std::shared_ptr<int> a = Stack.try_pop();
+		
+				if (a == nullptr)
+					{
+						Stack.wait_and_pop();
+					}
 		std::this_thread::sleep_for(std::chrono::seconds(std::rand() % (3) + 2));
 	}	
 }
