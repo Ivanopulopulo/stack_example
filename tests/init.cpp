@@ -14,5 +14,5 @@ TEST_CASE("pop")
 	stack<int> Stack;
 	Stack.push(5);
 	Stack.push(7);
-	REQUIRE(Stack.size() == 2);
+	REQUIRE(Stack.count() == 2);
 }
